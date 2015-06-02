@@ -1,8 +1,13 @@
+import json
 import unittest
 
-from recommdr.app import (data, build_lists, get_cosine_similarity,
+from recommdr.app import (build_lists, get_cosine_similarity,
                           get_movie_from_id, get_similar_users,
                           recommend)
+
+
+with open('tests/movies.json') as data_file:
+    data = json.load(data_file)
 
 
 class MainTestCase(unittest.TestCase):
@@ -37,7 +42,7 @@ class MainTestCase(unittest.TestCase):
         """
         movie_list = [2, 6, 28]
 
-        result = get_cosine_similarity(movie_list)
+        result = get_cosine_similarity(movie_list, data)
         self.assertTrue(type(result[0]), tuple)
         # cosine similarity of first item should be
         # greater than or equal to second and so on.
@@ -55,7 +60,7 @@ class MainTestCase(unittest.TestCase):
         """
         # ID 23 is Pulp Fiction (1994) on movies.json file
         movie_name = 'Pulp Fiction (1994)'
-        returned_movie_name = get_movie_from_id(str(23))
+        returned_movie_name = get_movie_from_id(str(23), data)
         self.assertEqual(movie_name, returned_movie_name)
 
     def test_get_similar_users(self):
@@ -64,13 +69,13 @@ class MainTestCase(unittest.TestCase):
         preference as given movie list
         """
         movie_list = [2, 6, 28]
-        users = get_similar_users(movie_list)
+        users = get_similar_users(movie_list, data)
 
         # users should be from given data
         for user in users:
             self.assertTrue(user in xrange(1, 807))
         # should return stated number of users
-        users = get_similar_users(movie_list, number=4)
+        users = get_similar_users(movie_list, data, number=4)
         self.assertEqual(len(users), 4)
 
     def test_recommend(self):
@@ -79,14 +84,14 @@ class MainTestCase(unittest.TestCase):
         """
         movie_list = [2, 6, 28]
 
-        recommended_list = recommend(movie_list)
+        recommended_list = recommend(movie_list, data)
 
         all_movie_names = data['movies'].values()
 
         for item in recommended_list:
             self.assertTrue(item in all_movie_names)
         # should return stated number of movies
-        recommended_list = recommend(movie_list, number=3)
+        recommended_list = recommend(movie_list, data, number=3)
         self.assertEqual(len(recommended_list), 3)
 
 if __name__ == '__main__':

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 import sys
 import json
 import copy
@@ -12,15 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from recommdr import __version__
 
 
-# absolute path to movies.json file dir
-DATA_DIR = os.sep.join(os.path.abspath(os.path.dirname(__file__)).split(os.sep)[:-2])
-
-# load json data
-with open('%s/data/movies.json' % DATA_DIR) as data_file:
-    data = json.load(data_file)
-
-
-def get_cosine_similarity(movie_list):
+def get_cosine_similarity(movie_list, data):
     """
     :param movie_list:
     :return: list of tuples made of user_id and cosine_similarity of given movie list.
@@ -72,7 +63,7 @@ def build_lists(lst1, lst2):
     return lst3, lst4
 
 
-def get_movie_from_id(id):
+def get_movie_from_id(id, data):
     """
     :param id:
     :return: Movie name from given id
@@ -80,24 +71,24 @@ def get_movie_from_id(id):
     return data['movies'][id]
 
 
-def get_similar_users(movie_list, number=3):
+def get_similar_users(movie_list, data, number=3):
     """
     :param movie_list:
     :return: list of users who have similar movie preference
     """
     # get top three tuples of cosine similarity
-    highest_cos_similarity = get_cosine_similarity(movie_list)[:number]
+    highest_cos_similarity = get_cosine_similarity(movie_list, data)[:number]
     # get users from tuples.
     similar_users = dict(highest_cos_similarity).keys()
     return similar_users
 
 
-def recommend(movie_list, number=None):
+def recommend(movie_list, data, number=None):
     """
     :param movie_list:
     :return: List of recommended movies
     """
-    similar_users = get_similar_users(movie_list)
+    similar_users = get_similar_users(movie_list, data)
     movies = []
     for user in similar_users:
         index = user - 1
@@ -106,7 +97,7 @@ def recommend(movie_list, number=None):
     [movies.remove(x) for x in movie_list if x in movies]
     # remove duplicates
     movies = list(set(movies))
-    movies = [get_movie_from_id(str(x)) for x in movies]
+    movies = [get_movie_from_id(str(x), data) for x in movies]
     if number and len(movies) > number:
         movies = movies[:number]
     return movies
@@ -119,6 +110,8 @@ def cli_options(args):
                         help='show current version of this tool.')
     parser.add_argument('--movies', type=int, nargs='+',
                         help="list of movies you like eg. recommdr --movies 1 7 20 ")
+    parser.add_argument('--json', type=file,
+                        help="Path to json file.")
     parser.add_argument('--number', type=int,
                         help="optional: number of movies to be recommended.")
     return parser.parse_args()
@@ -130,10 +123,11 @@ def main(argv=sys.argv):
         argv (list): List of arguments
     """
     args = cli_options(argv)
-    if not args.movies:
+    if not (args.movies or args.json):
         print "Please use -h or --help option to learn how to use recommdr."
         sys.exit()
-    return recommend(args.movies, number=args.number)
+    data = json.load(args.json)
+    return recommend(args.movies, data, number=args.number)
 
 if __name__ == "__main__":
     main()

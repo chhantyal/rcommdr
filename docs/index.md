@@ -21,9 +21,14 @@
 
 ## Usage
 
-* `recommdr -h, --help ` - Show help
+* `recommdr --movies 5 27 60 --json path/to/movies.json`
+
+More details below:
+
+* `recommdr -h, --help` - Show help
 * `recommdr --version` - Show current version of this tool
 * `recommdr --movies` - Given list of movie IDs, it will recommend movies.
+* `recommdr --json` - Path to json file.
 * `recommdr --movies --number` - Optional: number of movies to be recommended.
 
 ## Run tests
