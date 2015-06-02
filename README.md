@@ -9,7 +9,7 @@ A movie recommendation tool
 Documentation
 =============
 
-(MkDocs)[http://www.mkdocs.org/] is used to write docs. Once requirements are installed, run:
+[MkDocs](http://www.mkdocs.org/) is used to write docs. Once requirements are installed, run:
 
 `mkdocs serve`
 
