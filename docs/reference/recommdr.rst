@@ -1,5 +1,0 @@
-recommdr
-=============================
-
-.. automodule:: recommdr
-    :members:
