@@ -8,12 +8,9 @@ include .coveragerc
 include .isort.cfg
 include .pylintrc
 
-include AUTHORS.rst
-include CHANGELOG.rst
-include CONTRIBUTING.rst
+include AUTHORS.md
+include CHANGELOG.md
 include LICENSE
-include README.rst
-
-include tox.ini
+include README.md
 
 global-exclude *.py[co] __pycache__

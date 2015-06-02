@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import json
 import copy
@@ -10,8 +11,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from recommdr import __version__
 
+
+# absolute path to movies.json file dir
+DATA_DIR = os.sep.join(os.path.abspath(os.path.dirname(__file__)).split(os.sep)[:-2])
+
 # load json data
-with open('data/movies.json') as data_file:
+with open('%s/data/movies.json' % DATA_DIR) as data_file:
     data = json.load(data_file)
 
 
@@ -112,8 +117,8 @@ def cli_options(args):
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('--version', action='version', version=__version__,
                         help='show current version of this tool.')
-    parser.add_argument('--movies', type=list,
-                        help="list of movies you like eg. [1, 7, 20].")
+    parser.add_argument('--movies', type=int, nargs='+',
+                        help="list of movies you like eg. recommdr --movies 1 7 20 ")
     parser.add_argument('--number', type=int,
                         help="optional: number of movies to be recommended.")
     return parser.parse_args()
@@ -125,7 +130,6 @@ def main(argv=sys.argv):
         argv (list): List of arguments
     """
     args = cli_options(argv)
-    print args
     if not args.movies:
         print "Please use -h or --help option to learn how to use recommdr."
         sys.exit()

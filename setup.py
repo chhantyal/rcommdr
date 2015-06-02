@@ -22,7 +22,7 @@ setup(
     version="0.1.0",
     license="BSD",
     description="A movie recommendation tool",
-    long_description="%s\n%s" % (read("README.rst"), re.sub(":obj:`~?(.*?)`", r"``\1``", read("CHANGELOG.rst"))),
+    long_description="%s\n%s" % (read("README.md"), re.sub(":obj:`~?(.*?)`", r"``\1``", read("CHANGELOG.md"))),
     author="Nar Chhantyal",
     author_email="nkchhantyal@gmail.com",
     url="https://github.com/chhantyal/recommdr",
@@ -50,7 +50,7 @@ setup(
         # eg: "keyword1", "keyword2", "keyword3",
     ],
     install_requires=[
-        # eg: "aspectlib==1.1.1", "six>=1.7",
+        "scikit-learn>=0.16.1",
     ],
     extras_require={
         # eg: 'rst': ["docutils>=0.11"],
